@@ -59,16 +59,18 @@ loop();
 
 const timeline = gsap.timeline({ defaults: { duration: 1 } });
 timeline.fromTo(mesh.scale, { z: 0, x: 0, y: 0 }, { z: 1, x: 1, y: 1 });
-timeline.fromTo('nav', { y: '-100%' }, { y: '0%' });
-timeline.fromTo('.title', { opacity: 0 }, { opacity: 1 });
+//timeline.fromTo('nav', { y: '-100%' }, { y: '0%' });
+//timeline.fromTo('.title', { opacity: 0 }, { opacity: 1 });
 
 let mouseDown = false;
+let touchDown = false;
+
 let rgb = [];
 window.addEventListener('mousedown', () => (mouseDown = true));
 window.addEventListener('mouseup', () => (mouseDown = false));
 
-window.addEventListener('touchstart',() => mouseDown = true);
-window.addEventListener('touchend',() => mouseDown = false);
+window.addEventListener('touchstart',() => touchDown = true);
+window.addEventListener('touchend',() => touchDown = false);
 
 window.addEventListener('mousemove', (e) => {
     if(mouseDown){
@@ -83,15 +85,21 @@ window.addEventListener('mousemove', (e) => {
     }
 });
 
-window.addEventListener('touchmove', (e) => {
-    if(mouseDown){
+window.addEventListener('touchmove', () => {
+    if(touchDown){
         rgb = [
-            Math.round((e.pageX / sizes.width) * 255),
-            Math.round((e.pageY / sizes.width) * 255),
-            150
+            Math.round(getRandomInt(1, 255)),
+            Math.round(getRandomInt(1, 255)),
+            Math.round(getRandomInt(1, 255)),
         ];
 
         let newColor = new THREE.Color(`rgb(${rgb.join(',')})`);
         gsap.to(mesh.material.color,{r: newColor.r,g: newColor.g,b: newColor.b});
     }
 });
+
+function getRandomInt(min, max){
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
