@@ -67,7 +67,23 @@ let rgb = [];
 window.addEventListener('mousedown', () => (mouseDown = true));
 window.addEventListener('mouseup', () => (mouseDown = false));
 
+window.addEventListener('touchstart',() => mouseDown = true);
+window.addEventListener('touchend',() => mouseDown = false);
+
 window.addEventListener('mousemove', (e) => {
+    if(mouseDown){
+        rgb = [
+            Math.round((e.pageX / sizes.width) * 255),
+            Math.round((e.pageY / sizes.width) * 255),
+            150
+        ];
+
+        let newColor = new THREE.Color(`rgb(${rgb.join(',')})`);
+        gsap.to(mesh.material.color,{r: newColor.r,g: newColor.g,b: newColor.b});
+    }
+});
+
+window.addEventListener('touchmove', (e) => {
     if(mouseDown){
         rgb = [
             Math.round((e.pageX / sizes.width) * 255),
